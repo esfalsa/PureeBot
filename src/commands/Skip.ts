@@ -7,9 +7,10 @@ import {
 import { Command } from "../Command";
 import { getConfig, getNext } from "../State";
 
-export const Feed: Command = {
-  name: "feed",
-  description: "Gets the next target and marks the previous one as detagged",
+export const Skip: Command = {
+  name: "skip",
+  description:
+    "Gets the next target without marking the previous one as detagged",
   type: ApplicationCommandType.ChatInput,
   run: async (_client: Client, interaction: CommandInteraction) => {
     const { update, switchLength } = getConfig();
@@ -19,16 +20,7 @@ export const Feed: Command = {
       return;
     }
 
-    const region = getNext(true);
-
-    if (region == null) {
-      await interaction.followUp({
-        content:
-          "No more regions found! Use **/report** to list detagged regions.",
-      });
-      return;
-    }
-
+    const region = getNext(false);
     const embed = new EmbedBuilder()
       .setTitle(region.Region)
       .setURL(region.Link)

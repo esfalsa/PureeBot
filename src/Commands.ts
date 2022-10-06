@@ -2,5 +2,6 @@ import { Command } from "./Command";
 import { Set } from "./commands/Set";
 import { Current } from "./commands/Current";
 import { Feed } from "./commands/Feed";
+import { Skip } from "./commands/Skip";
 
-export const Commands: Command[] = [Set, Current, Feed];
+export const Commands: Command[] = [Set, Current, Feed, Skip];

@@ -54,11 +54,12 @@ export function getRegions() {
 
 export function getNext(logPrevious: boolean) {
   if (currentIndex == null) {
-    currentIndex = 0;
+    currentIndex = -1;
   } else if (logPrevious) {
     detagged.push(targets[currentIndex]);
-    currentIndex++;
   }
+
+  currentIndex++;
 
   return targets[currentIndex];
 }
