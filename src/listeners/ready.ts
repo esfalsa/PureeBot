@@ -13,7 +13,7 @@ export default (client: Client): void => {
     );
     setRegions(await response.json());
 
-    await client.application.commands.set(Commands);
+    await client.application.commands.set([...Commands.values()]);
 
     console.log(`${client.user.username} is online.`);
   });
