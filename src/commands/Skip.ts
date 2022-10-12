@@ -21,6 +21,15 @@ export const Skip: Command = {
     }
 
     const region = getNext(false);
+
+    if (region == null) {
+      await interaction.followUp({
+        content:
+          "No more regions found! Use **/report** to list detagged regions.",
+      });
+      return;
+    }
+
     const embed = new EmbedBuilder()
       .setTitle(region.Region)
       .setURL(region.Link)
