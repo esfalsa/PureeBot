@@ -3,6 +3,9 @@ import {
   Client,
   ApplicationCommandType,
   EmbedBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
 } from "discord.js";
 import { Command } from "../Command";
 import { getConfig, getNext } from "../State";
@@ -43,6 +46,13 @@ export const Feed: Command = {
         },
       ]);
 
-    await interaction.followUp({ embeds: [embed] });
+    const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setLabel("Open")
+        .setStyle(ButtonStyle.Link)
+        .setURL(region.Link)
+    );
+
+    await interaction.followUp({ embeds: [embed], components: [actions] });
   },
 };
