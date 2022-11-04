@@ -12,6 +12,7 @@ import { Current } from "./commands/Current";
 import { Feed } from "./commands/Feed";
 import { Skip } from "./commands/Skip";
 import { Report } from "./commands/Report";
+import { SkipTo } from "./commands/SkipTo";
 
 const Commands: Collection<string, Command> = new Collection([
   ["set", Set],
@@ -20,6 +21,7 @@ const Commands: Collection<string, Command> = new Collection([
   ["feed", Feed],
   ["skip", Skip],
   ["report", Report],
+  ["skipto", SkipTo],
 ]);
 
 Commands.set("help", {

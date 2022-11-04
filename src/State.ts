@@ -67,3 +67,11 @@ export function getNext(logPrevious: boolean) {
 export function getDetagged() {
   return detagged;
 }
+
+export function getAt(progress: number) {
+  const updateName = Update[update] as keyof typeof Update;
+
+  currentIndex = targets.findIndex((region) => region[updateName] >= progress);
+
+  return targets[currentIndex];
+}
