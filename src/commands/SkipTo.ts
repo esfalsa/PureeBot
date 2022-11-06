@@ -5,8 +5,9 @@ import {
   EmbedBuilder,
   ApplicationCommandOptionType,
 } from "discord.js";
+import { createRegionResponse } from "../utils";
 import { Command } from "../Command";
-import { getAt, getConfig, getNext } from "../State";
+import { getAt, getConfig } from "../State";
 
 export const SkipTo: Command = {
   name: "skipto",
@@ -32,28 +33,6 @@ export const SkipTo: Command = {
 
     const region = getAt(progress);
 
-    if (region == null) {
-      await interaction.followUp({
-        content:
-          "No more regions found! Use **/report** to list detagged regions.",
-      });
-      return;
-    }
-
-    const embed = new EmbedBuilder()
-      .setTitle(region.Region)
-      .setURL(region.Link)
-      .setFields([
-        {
-          name: "Issues",
-          value: region.Issues,
-        },
-        {
-          name: "Link",
-          value: region.Link,
-        },
-      ]);
-
-    await interaction.followUp({ embeds: [embed] });
+    await interaction.followUp(createRegionResponse(region));
   },
 };

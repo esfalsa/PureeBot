@@ -1,12 +1,5 @@
-import {
-  CommandInteraction,
-  Client,
-  ApplicationCommandType,
-  EmbedBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ActionRowBuilder,
-} from "discord.js";
+import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
+import { createRegionResponse } from "../utils";
 import { Command } from "../Command";
 import { getConfig, getNext } from "../State";
 
@@ -24,35 +17,6 @@ export const Feed: Command = {
 
     const region = getNext(true);
 
-    if (region == null) {
-      await interaction.followUp({
-        content:
-          "No more regions found! Use **/report** to list detagged regions.",
-      });
-      return;
-    }
-
-    const embed = new EmbedBuilder()
-      .setTitle(region.Region)
-      .setURL(region.Link)
-      .setFields([
-        {
-          name: "Issues",
-          value: region.Issues,
-        },
-        {
-          name: "Link",
-          value: region.Link,
-        },
-      ]);
-
-    const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder()
-        .setLabel("Open")
-        .setStyle(ButtonStyle.Link)
-        .setURL(region.Link)
-    );
-
-    await interaction.followUp({ embeds: [embed], components: [actions] });
+    await interaction.followUp(createRegionResponse(region));
   },
 };

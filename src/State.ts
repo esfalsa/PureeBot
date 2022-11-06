@@ -1,21 +1,3 @@
-enum Update {
-  Major = 0,
-  Minor,
-}
-
-// type Update = "Major" | "Minor";
-
-type Region = {
-  Region: string;
-  Issues: string;
-  Minor: number;
-  MinorTimestamp: string;
-  Major: number;
-  MajorTimestamp: string;
-  NativeEmbassies: boolean;
-  Link: string;
-};
-
 let update: Update;
 let switchLength: number;
 let regions: Region[];
@@ -27,12 +9,10 @@ export function setConfig(updateVal: Update, switchLengthVal: number) {
   update = updateVal;
   switchLength = switchLengthVal;
 
-  const updateName = Update[update] as keyof typeof Update;
-
   let currentProgress = -switchLength;
   targets = regions.filter((region) => {
-    if (region[updateName] >= currentProgress + switchLength) {
-      currentProgress = region[updateName];
+    if (region[update] >= currentProgress + switchLength) {
+      currentProgress = region[update];
       return true;
     } else {
       return false;
@@ -69,9 +49,9 @@ export function getDetagged() {
 }
 
 export function getAt(progress: number) {
-  const updateName = Update[update] as keyof typeof Update;
+  // const updateName = Update[update] as keyof typeof Update;
 
-  currentIndex = targets.findIndex((region) => region[updateName] >= progress);
+  currentIndex = targets.findIndex((region) => region[update] >= progress);
 
   return targets[currentIndex];
 }

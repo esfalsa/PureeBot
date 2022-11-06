@@ -1,9 +1,4 @@
-import {
-  CommandInteraction,
-  Client,
-  ApplicationCommandType,
-  EmbedBuilder,
-} from "discord.js";
+import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
 import { Command } from "../Command";
 import { getConfig, getDetagged } from "../State";
 

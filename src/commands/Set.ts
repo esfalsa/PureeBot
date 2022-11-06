@@ -13,18 +13,18 @@ export const Set: Command = {
   type: ApplicationCommandType.ChatInput,
   options: [
     {
-      type: ApplicationCommandOptionType.Integer,
+      type: ApplicationCommandOptionType.String,
       name: "update",
       description: "The update (major or minor) to find detags for.",
       required: true,
       choices: [
         {
           name: "major",
-          value: 0,
+          value: "Major",
         },
         {
           name: "minor",
-          value: 1,
+          value: "Minor",
         },
       ],
     },
@@ -37,7 +37,7 @@ export const Set: Command = {
   ],
   run: async (_client: Client, interaction: CommandInteraction) => {
     setConfig(
-      interaction.options.get("update")?.value as number,
+      interaction.options.get("update")?.value as Update,
       interaction.options.get("switchlength")?.value as number
     );
 
