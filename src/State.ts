@@ -20,6 +20,10 @@ export function setConfig(updateVal: Update, switchLengthVal: number) {
   });
 }
 
+export function hasConfig() {
+  return update != null && switchLength != null;
+}
+
 export function getConfig() {
   return { update, switchLength, targets };
 }
@@ -33,6 +37,10 @@ export function getRegions() {
 }
 
 export function getNext(logPrevious: boolean) {
+  if (!hasConfig()) {
+    return undefined;
+  }
+
   if (currentIndex == null) {
     currentIndex = -1;
   } else if (logPrevious) {
@@ -49,7 +57,9 @@ export function getDetagged() {
 }
 
 export function getAt(progress: number) {
-  // const updateName = Update[update] as keyof typeof Update;
+  if (!hasConfig()) {
+    return undefined;
+  }
 
   currentIndex = targets.findIndex((region) => region[update] >= progress);
 

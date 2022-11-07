@@ -5,7 +5,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 
-export function createRegionResponse(region: Region) {
+export function createRegionResponse(region?: Region) {
   if (region == null) {
     return {
       content:

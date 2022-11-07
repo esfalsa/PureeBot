@@ -8,13 +8,6 @@ export const Feed: Command = {
   description: "Gets the next target and marks the previous one as detagged",
   type: ApplicationCommandType.ChatInput,
   run: async (_client: Client, interaction: CommandInteraction) => {
-    const { update, switchLength } = getConfig();
-
-    if (update == null || switchLength == null) {
-      await interaction.followUp({ content: "No settings set." });
-      return;
-    }
-
     const region = getNext(true);
 
     await interaction.followUp(createRegionResponse(region));
