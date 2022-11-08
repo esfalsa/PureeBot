@@ -22,8 +22,14 @@ export function createRegionResponse(region?: Region) {
         value: region.Issues,
       },
       {
-        name: "Link",
-        value: region.Link,
+        name: "Major",
+        value: region.MajorTimestamp,
+        inline: true,
+      },
+      {
+        name: "Minor",
+        value: region.MinorTimestamp,
+        inline: true,
       },
     ]);
 
@@ -31,7 +37,7 @@ export function createRegionResponse(region?: Region) {
     new ButtonBuilder()
       .setLabel("Open")
       .setStyle(ButtonStyle.Link)
-      .setURL(region.Link)
+      .setURL(region.Link),
   );
 
   return { embeds: [embed], components: [actions] };
