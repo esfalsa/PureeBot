@@ -7,7 +7,7 @@ import {
   EmbedBuilder,
   TextBasedChannel,
 } from "discord.js";
-import { getNext, toggleDetagged } from "./State";
+import { getNext, getTargetCount, toggleDetagged } from "./State";
 
 export function createRegionResponse(
   region?: Region,
@@ -19,6 +19,8 @@ export function createRegionResponse(
         "No more regions found! Use **/report** to list detagged regions.",
     };
   }
+
+  const targetCount = getTargetCount();
 
   const embed = new EmbedBuilder()
     .setTitle(region.Region)
@@ -39,7 +41,10 @@ export function createRegionResponse(
         value: region.MinorTimestamp,
         inline: true,
       },
-    ]);
+    ])
+    .setFooter({
+      text: `Target ${(region.index ?? 0) + 1} of ${targetCount}`,
+    });
 
   const actions = new ActionRowBuilder<ButtonBuilder>().addComponents([
     new ButtonBuilder()

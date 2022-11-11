@@ -9,5 +9,7 @@ type Region = {
   MajorTimestamp: string;
   NativeEmbassies: boolean;
   Link: string;
+  Organizations: string;
   detagged?: boolean;
+  index?: number;
 };

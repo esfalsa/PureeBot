@@ -11,11 +11,15 @@ export function setConfig(updateVal: Update, switchLengthVal: number) {
   targets = regions.reduce<Region[]>(
     (filtered, region) => {
       if (region[update] >= filtered.at(-1)![update] + switchLength) {
-        filtered.push({ ...region, detagged: false });
+        filtered.push({
+          ...region,
+          detagged: false,
+          index: filtered.length,
+        });
       }
       return filtered;
     },
-    [regions[0]]
+    [{ ...regions[0], detagged: false, index: 0 }]
   );
 }
 
@@ -47,6 +51,22 @@ export function getNext() {
   currentIndex++;
 
   return targets[currentIndex];
+}
+
+export function getCurrentIndex() {
+  if (!hasConfig()) {
+    return undefined;
+  }
+
+  return currentIndex;
+}
+
+export function getTargetCount() {
+  if (!hasConfig()) {
+    return undefined;
+  }
+
+  return targets.length;
 }
 
 export function getDetagged() {

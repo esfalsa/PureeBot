@@ -4,8 +4,9 @@ import {
   ApplicationCommandType,
   ApplicationCommandOptionType,
 } from "discord.js";
+import { sendRegionMessage } from "../utils";
 import { Command } from "../Command";
-import { setConfig } from "../State";
+import { getNext, getTargetCount, setConfig } from "../State";
 
 export const Set: Command = {
   name: "set",
@@ -36,13 +37,24 @@ export const Set: Command = {
     },
   ],
   run: async (_client: Client, interaction: CommandInteraction) => {
-    setConfig(
-      interaction.options.get("update")?.value as Update,
-      interaction.options.get("switchlength")?.value as number
-    );
+    const update = interaction.options.get("update")?.value as Update;
+    const switchLength = interaction.options.get("switchlength")
+      ?.value as number;
 
-    const content = `Updated settings.`;
+    setConfig(update, switchLength);
+
+    const targetCount = getTargetCount() ?? 0;
+
+    const content = `Starting run for **${update.toLowerCase()}** update with **${targetCount}** targets and **${switchLength}** seconds between each target.`;
 
     await interaction.followUp({ content });
+
+    const region = getNext();
+
+    if (!region || !interaction.channel) {
+      return;
+    }
+
+    sendRegionMessage(region, interaction.channel);
   },
 };
