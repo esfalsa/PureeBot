@@ -3,21 +3,20 @@ let switchLength: number;
 let regions: Region[];
 let targets: Region[];
 let currentIndex: number;
-let detagged: Region[] = [];
 
 export function setConfig(updateVal: Update, switchLengthVal: number) {
   update = updateVal;
   switchLength = switchLengthVal;
 
-  let currentProgress = -switchLength;
-  targets = regions.filter((region) => {
-    if (region[update] >= currentProgress + switchLength) {
-      currentProgress = region[update];
-      return true;
-    } else {
-      return false;
-    }
-  });
+  targets = regions.reduce<Region[]>(
+    (filtered, region) => {
+      if (region[update] >= filtered.at(-1)![update] + switchLength) {
+        filtered.push({ ...region, detagged: false });
+      }
+      return filtered;
+    },
+    [regions[0]]
+  );
 }
 
 export function hasConfig() {
@@ -36,15 +35,13 @@ export function getRegions() {
   return regions;
 }
 
-export function getNext(logPrevious: boolean) {
+export function getNext() {
   if (!hasConfig()) {
     return undefined;
   }
 
   if (currentIndex == null) {
     currentIndex = -1;
-  } else if (logPrevious) {
-    detagged.push(targets[currentIndex]);
   }
 
   currentIndex++;
@@ -53,7 +50,7 @@ export function getNext(logPrevious: boolean) {
 }
 
 export function getDetagged() {
-  return detagged;
+  return targets.filter(({ detagged }) => detagged);
 }
 
 export function getAt(progress: number) {
@@ -64,4 +61,14 @@ export function getAt(progress: number) {
   currentIndex = targets.findIndex((region) => region[update] >= progress);
 
   return targets[currentIndex];
+}
+
+export function toggleDetagged(regionName: string) {
+  let region = targets.find((region) => region.Region === regionName);
+
+  if (region) {
+    region.detagged = !region?.detagged;
+  }
+
+  return region;
 }

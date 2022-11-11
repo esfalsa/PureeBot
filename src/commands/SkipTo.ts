@@ -4,9 +4,9 @@ import {
   ApplicationCommandType,
   ApplicationCommandOptionType,
 } from "discord.js";
-import { createRegionResponse } from "../utils";
+import { sendRegionMessage } from "../utils";
 import { Command } from "../Command";
-import { getAt, getConfig } from "../State";
+import { getAt } from "../State";
 
 export const SkipTo: Command = {
   name: "skipto",
@@ -21,9 +21,15 @@ export const SkipTo: Command = {
     },
   ],
   run: async (_client: Client, interaction: CommandInteraction) => {
+    interaction.deleteReply();
+
     const progress = interaction.options.get("progress")?.value as number;
     const region = getAt(progress);
 
-    await interaction.followUp(createRegionResponse(region));
+    if (!region || !interaction.channel) {
+      return;
+    }
+
+    sendRegionMessage(region, interaction.channel);
   },
 };

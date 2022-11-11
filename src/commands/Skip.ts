@@ -1,12 +1,7 @@
-import {
-  CommandInteraction,
-  Client,
-  ApplicationCommandType,
-  EmbedBuilder,
-} from "discord.js";
-import { createRegionResponse } from "../utils";
+import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
+import { sendRegionMessage } from "../utils";
 import { Command } from "../Command";
-import { getConfig, getNext } from "../State";
+import { getNext } from "../State";
 
 export const Skip: Command = {
   name: "skip",
@@ -14,8 +9,14 @@ export const Skip: Command = {
     "Gets the next target without marking the previous one as detagged",
   type: ApplicationCommandType.ChatInput,
   run: async (_client: Client, interaction: CommandInteraction) => {
-    const region = getNext(false);
+    interaction.deleteReply();
 
-    await interaction.followUp(createRegionResponse(region));
+    const region = getNext();
+
+    if (!region || !interaction.channel) {
+      return;
+    }
+
+    sendRegionMessage(region, interaction.channel);
   },
 };

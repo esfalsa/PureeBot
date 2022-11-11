@@ -1,11 +1,18 @@
 import {
   ActionRowBuilder,
+  BaseMessageOptions,
   ButtonBuilder,
   ButtonStyle,
+  ComponentType,
   EmbedBuilder,
+  TextBasedChannel,
 } from "discord.js";
+import { getNext, toggleDetagged } from "./State";
 
-export function createRegionResponse(region?: Region) {
+export function createRegionResponse(
+  region?: Region,
+  allowSkip = true
+): BaseMessageOptions {
   if (region == null) {
     return {
       content:
@@ -16,6 +23,7 @@ export function createRegionResponse(region?: Region) {
   const embed = new EmbedBuilder()
     .setTitle(region.Region)
     .setURL(region.Link)
+    .setColor(region.detagged ? "DarkGreen" : "Red")
     .setFields([
       {
         name: "Issues",
@@ -33,12 +41,52 @@ export function createRegionResponse(region?: Region) {
       },
     ]);
 
-  const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  const actions = new ActionRowBuilder<ButtonBuilder>().addComponents([
     new ButtonBuilder()
       .setLabel("Open")
       .setStyle(ButtonStyle.Link)
       .setURL(region.Link),
-  );
+    new ButtonBuilder()
+      .setCustomId("mark-hit")
+      .setLabel(region.detagged ? "Unmark as hit" : "Mark as hit")
+      .setStyle(ButtonStyle.Success),
+    ...(allowSkip
+      ? [
+          new ButtonBuilder()
+            .setCustomId("mark-skip")
+            .setLabel("Skip")
+            .setStyle(ButtonStyle.Danger),
+        ]
+      : []),
+  ]);
 
   return { embeds: [embed], components: [actions] };
+}
+
+export async function sendRegionMessage(
+  region: Region | undefined,
+  channel: TextBasedChannel
+) {
+  let nextRegionSent = false;
+
+  const message = await channel.send(createRegionResponse(region));
+
+  const collector = message.createMessageComponentCollector({
+    componentType: ComponentType.Button,
+    time: 60000,
+    filter: (interaction) => interaction.channel != null,
+  });
+
+  collector.on("collect", (interaction) => {
+    if (!nextRegionSent) {
+      sendRegionMessage(getNext(), interaction.channel!);
+      nextRegionSent = true;
+    }
+
+    if (interaction.customId === "mark-hit") {
+      region = toggleDetagged(region?.Region!);
+    }
+
+    interaction.update(createRegionResponse(region, !nextRegionSent));
+  });
 }
