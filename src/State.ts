@@ -1,10 +1,13 @@
 let update: Update;
 let switchLength: number;
-let regions: Region[];
 let targets: Region[];
 let currentIndex: number;
 
-export function setConfig(updateVal: Update, switchLengthVal: number) {
+export async function setConfig(updateVal: Update, switchLengthVal: number) {
+  const regions: Region[] = await fetch(
+    "https://esfalsa.github.io/puree/data/detags.json"
+  ).then((response) => response.json());
+
   update = updateVal;
   switchLength = switchLengthVal;
 
@@ -21,6 +24,8 @@ export function setConfig(updateVal: Update, switchLengthVal: number) {
     },
     [{ ...regions[0], detagged: false, index: 0 }]
   );
+
+  return targets.length;
 }
 
 export function hasConfig() {
@@ -29,14 +34,6 @@ export function hasConfig() {
 
 export function getConfig() {
   return { update, switchLength, targets };
-}
-
-export function setRegions(regionsVal: Region[]) {
-  regions = regionsVal;
-}
-
-export function getRegions() {
-  return regions;
 }
 
 export function getNext() {

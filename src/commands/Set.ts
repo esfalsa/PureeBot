@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import { sendRegionMessage } from "../utils";
 import { Command } from "../Command";
-import { getNext, getTargetCount, setConfig } from "../State";
+import { getNext, setConfig } from "../State";
 
 export const Set: Command = {
   name: "set",
@@ -41,9 +41,7 @@ export const Set: Command = {
     const switchLength = interaction.options.get("switchlength")
       ?.value as number;
 
-    setConfig(update, switchLength);
-
-    const targetCount = getTargetCount() ?? 0;
+    const targetCount = await setConfig(update, switchLength);
 
     const content = `Starting run for **${update.toLowerCase()}** update with **${targetCount}** targets and **${switchLength}** seconds between each target.`;
 
